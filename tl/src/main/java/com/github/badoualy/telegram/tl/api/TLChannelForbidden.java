@@ -40,7 +40,7 @@ public class TLChannelForbidden extends TLAbsChat {
     public TLChannelForbidden() {
     }
 
-    public TLChannelForbidden(boolean broadcast, boolean megagroup, int id, long accessHash, String title) {
+    public TLChannelForbidden(boolean broadcast, boolean megagroup, long id, long accessHash, String title) {
         this.broadcast = broadcast;
         this.megagroup = megagroup;
         this.id = id;
@@ -59,7 +59,7 @@ public class TLChannelForbidden extends TLAbsChat {
         computeFlags();
 
         writeInt(flags, stream);
-        writeInt(id, stream);
+        writeLong(id, stream);
         writeLong(accessHash, stream);
         writeString(title, stream);
     }
@@ -70,7 +70,7 @@ public class TLChannelForbidden extends TLAbsChat {
         flags = readInt(stream);
         broadcast = (flags & 32) != 0;
         megagroup = (flags & 256) != 0;
-        id = readInt(stream);
+        id = readLong(stream);
         accessHash = readLong(stream);
         title = readTLString(stream);
     }
@@ -81,7 +81,7 @@ public class TLChannelForbidden extends TLAbsChat {
 
         int size = SIZE_CONSTRUCTOR_ID;
         size += SIZE_INT32;
-        size += SIZE_INT32;
+        size += SIZE_INT64;
         size += SIZE_INT64;
         size += computeTLStringSerializedSize(title);
         return size;
@@ -113,11 +113,11 @@ public class TLChannelForbidden extends TLAbsChat {
         this.megagroup = megagroup;
     }
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 

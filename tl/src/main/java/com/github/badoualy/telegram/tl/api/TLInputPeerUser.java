@@ -22,7 +22,7 @@ public class TLInputPeerUser extends TLAbsInputPeer {
 
     public static final int CONSTRUCTOR_ID = 0x7b8e7de6;
 
-    protected int userId;
+    protected long userId;
 
     protected long accessHash;
 
@@ -31,28 +31,28 @@ public class TLInputPeerUser extends TLAbsInputPeer {
     public TLInputPeerUser() {
     }
 
-    public TLInputPeerUser(int userId, long accessHash) {
+    public TLInputPeerUser(long userId, long accessHash) {
         this.userId = userId;
         this.accessHash = accessHash;
     }
 
     @Override
     public void serializeBody(OutputStream stream) throws IOException {
-        writeInt(userId, stream);
+        writeLong(userId, stream);
         writeLong(accessHash, stream);
     }
 
     @Override
     @SuppressWarnings({"unchecked", "SimplifiableConditionalExpression"})
     public void deserializeBody(InputStream stream, TLContext context) throws IOException {
-        userId = readInt(stream);
+        userId = readLong(stream);
         accessHash = readLong(stream);
     }
 
     @Override
     public int computeSerializedSize() {
         int size = SIZE_CONSTRUCTOR_ID;
-        size += SIZE_INT32;
+        size += SIZE_INT64;
         size += SIZE_INT64;
         return size;
     }
@@ -67,7 +67,7 @@ public class TLInputPeerUser extends TLAbsInputPeer {
         return CONSTRUCTOR_ID;
     }
 
-    public int getUserId() {
+    public long getUserId() {
         return userId;
     }
 

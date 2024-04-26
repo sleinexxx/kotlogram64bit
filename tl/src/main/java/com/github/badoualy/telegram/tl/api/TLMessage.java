@@ -7,17 +7,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import static com.github.badoualy.telegram.tl.StreamUtils.readInt;
-import static com.github.badoualy.telegram.tl.StreamUtils.readTLObject;
-import static com.github.badoualy.telegram.tl.StreamUtils.readTLString;
-import static com.github.badoualy.telegram.tl.StreamUtils.readTLVector;
-import static com.github.badoualy.telegram.tl.StreamUtils.writeInt;
-import static com.github.badoualy.telegram.tl.StreamUtils.writeString;
-import static com.github.badoualy.telegram.tl.StreamUtils.writeTLObject;
-import static com.github.badoualy.telegram.tl.StreamUtils.writeTLVector;
-import static com.github.badoualy.telegram.tl.TLObjectUtils.SIZE_CONSTRUCTOR_ID;
-import static com.github.badoualy.telegram.tl.TLObjectUtils.SIZE_INT32;
-import static com.github.badoualy.telegram.tl.TLObjectUtils.computeTLStringSerializedSize;
+import static com.github.badoualy.telegram.tl.StreamUtils.*;
+import static com.github.badoualy.telegram.tl.TLObjectUtils.*;
 
 /**
  * @author Yannick Badoual yann.badoual@gmail.com
@@ -39,7 +30,7 @@ public class TLMessage extends TLAbsMessage {
 
     protected boolean post;
 
-    protected Integer fromId;
+    protected Long fromId;
 
     protected TLAbsPeer toId;
 
@@ -68,7 +59,7 @@ public class TLMessage extends TLAbsMessage {
     public TLMessage() {
     }
 
-    public TLMessage(boolean out, boolean mentioned, boolean mediaUnread, boolean silent, boolean post, int id, Integer fromId, TLAbsPeer toId, TLMessageFwdHeader fwdFrom, Integer viaBotId, Integer replyToMsgId, int date, String message, TLAbsMessageMedia media, TLAbsReplyMarkup replyMarkup, TLVector<TLAbsMessageEntity> entities, Integer views, Integer editDate) {
+    public TLMessage(boolean out, boolean mentioned, boolean mediaUnread, boolean silent, boolean post, int id, long fromId, TLAbsPeer toId, TLMessageFwdHeader fwdFrom, Integer viaBotId, Integer replyToMsgId, int date, String message, TLAbsMessageMedia media, TLAbsReplyMarkup replyMarkup, TLVector<TLAbsMessageEntity> entities, Integer views, Integer editDate) {
         this.out = out;
         this.mentioned = mentioned;
         this.mediaUnread = mediaUnread;
@@ -115,7 +106,7 @@ public class TLMessage extends TLAbsMessage {
         writeInt(id, stream);
         if ((flags & 256) != 0) {
             if (fromId == null) throwNullFieldException("fromId", flags);
-            writeInt(fromId, stream);
+            writeLong(fromId, stream);
         }
         writeTLObject(toId, stream);
         if ((flags & 4) != 0) {
@@ -164,7 +155,7 @@ public class TLMessage extends TLAbsMessage {
         silent = (flags & 8192) != 0;
         post = (flags & 16384) != 0;
         id = readInt(stream);
-        fromId = (flags & 256) != 0 ? readInt(stream) : null;
+        fromId = (flags & 256) != 0 ? readLong(stream) : null;
         toId = readTLObject(stream, context, TLAbsPeer.class, -1);
         fwdFrom = (flags & 4) != 0 ? readTLObject(stream, context, TLMessageFwdHeader.class,
                                                   TLMessageFwdHeader.CONSTRUCTOR_ID) : null;
@@ -188,7 +179,7 @@ public class TLMessage extends TLAbsMessage {
         size += SIZE_INT32;
         if ((flags & 256) != 0) {
             if (fromId == null) throwNullFieldException("fromId", flags);
-            size += SIZE_INT32;
+            size += SIZE_INT64;
         }
         size += toId.computeSerializedSize();
         if ((flags & 4) != 0) {
@@ -286,11 +277,11 @@ public class TLMessage extends TLAbsMessage {
         this.id = id;
     }
 
-    public Integer getFromId() {
+    public long getFromId() {
         return fromId;
     }
 
-    public void setFromId(Integer fromId) {
+    public void setFromId(Long fromId) {
         this.fromId = fromId;
     }
 

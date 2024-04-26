@@ -73,7 +73,7 @@ public class TLUser extends TLAbsUser {
 
     protected String langCode;
 
-    private final String _constructor = "user#2e13f4c3";
+    private final String _constructor = "user#215c4438";
 
     public TLUser() {
     }
@@ -371,7 +371,7 @@ public class TLUser extends TLAbsUser {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
